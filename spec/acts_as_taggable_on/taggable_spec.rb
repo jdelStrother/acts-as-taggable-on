@@ -281,6 +281,13 @@ describe "Taggable" do
       bob.save
     }.should change(ActsAsTaggableOn::Tagging, :count).by(1)
   end
+
+  it "should save the original tag name for display purposes" do
+    language = TaggableModel.create(:name =>"Spanish", :tag_list=>"español")
+    language.save!
+    language.tags.join.should == 'espanol'
+    language.taggings[0].original_tag.should == "español"
+  end
  
   describe "Associations" do
     before(:each) do

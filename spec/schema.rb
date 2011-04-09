@@ -7,6 +7,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.datetime "created_at"
     t.integer  "tagger_id",     :limit => 11
     t.string   "tagger_type"
+    t.string   "original_tag"
   end
 
   add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"

@@ -14,6 +14,7 @@ class ActsAsTaggableOnMigration < ActiveRecord::Migration
       # long enough to store the required class names.
       t.column :taggable_type, :string
       t.column :context, :string
+      t.column :original_tag, :string
       
       t.column :created_at, :datetime
     end

@@ -39,13 +39,12 @@ module ActsAsTaggableOn
     end
 
     def self.find_or_create_all_with_like_by_name(*list)
-      list = [list].flatten
+      list = [list].flatten.map{|name| normalise(name)}.uniq
 
       return [] if list.empty?
 
       existing_tags = Tag.named_any(list).all
       new_tag_names = list.reject do |name| 
-                        name = normalise(name)
                         existing_tags.any? { |tag| tag.name == name }
                       end
       created_tags  = new_tag_names.map { |name| Tag.create(:name => name) }
