@@ -97,6 +97,14 @@ describe "Taggable" do
     TaggableModel.tagged_with("ruby").first.should == @taggable
   end
 
+  it "should be able to find normalised tags" do
+    @taggable.skill_list = "español, français"
+    @taggable.save
+
+    TaggableModel.tagged_with('español', :any=>true).first.should == @taggable
+    TaggableModel.tagged_with('espanol', :any=>true).first.should == @taggable
+  end
+
   it "should be able to find by tag with context" do
     @taggable.skill_list = "ruby, rails, css"
     @taggable.tag_list = "bob, charlie"

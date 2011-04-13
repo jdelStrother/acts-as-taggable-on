@@ -68,7 +68,7 @@ module ActsAsTaggableOn::Taggable
       #   User.tagged_with("awesome", "cool", :match_all => true) # Users that are tagged with just awesome and cool
       #   User.tagged_with("awesome", "cool", :owned_by => foo ) # Users that are tagged with just awesome and cool by 'foo'
       def tagged_with(tags, options = {})
-        tag_list = ActsAsTaggableOn::TagList.from(tags)
+        tag_list = ActsAsTaggableOn::TagList.from(tags).map{|t| ActsAsTaggableOn::Tag.normalise(t)}
         empty_result = scoped(:conditions => "1 = 0")
 
         return empty_result if tag_list.empty?
