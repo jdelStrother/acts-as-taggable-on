@@ -1,3 +1,4 @@
+# encoding: utf-8
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe ActsAsTaggableOn::Tag do
@@ -133,4 +134,47 @@ describe ActsAsTaggableOn::Tag do
     end
     
   end
+
+  describe "tag normalising" do
+    it "should remove excess punctuation" do
+      @tag.name = " super :  sexy!"
+      @tag.name.should == "super sexy"
+    end
+    it "should downcase the tag" do
+      @tag.name = "ThiSISAtest"
+      @tag.name.should == "thisisatest"
+    end
+    it "should strip all non a-z0-9 letters" do
+      @tag.name = "test!@£$%^^%£%$@test123"
+      @tag.name.should == "testtest123"
+    end
+    it "should keep spaces intact" do
+      @tag.name = "test test2"
+      @tag.name.should == "test test2"
+    end
+    it "should only use one space for blocks of whitespace" do
+      @tag.name = "test  test2"
+      @tag.name.should == "test test2"
+    end
+    it "should strip spaces at the start and end of the tag (and not add -)" do
+      @tag.name = "  test  "
+      @tag.name.should == "test"
+    end
+    it "should transliterate accented characters" do
+      @tag.name = "español"
+      @tag.name.should == "espanol"
+    end
+    it "should stick with the original tag if the normalized variant would be empty" do
+      @tag.name = "日本国"
+      @tag.name.should == "日本国"
+    end
+
+    it "should normalise search terms" do
+      @tag.name = "español"
+      @tag.save!
+      ActsAsTaggableOn::Tag.named('español').should include(@tag)
+
+    end
+  end
+
 end
